@@ -1,0 +1,13 @@
+# dataset
+data/
+
+# pycharm
+.idea/
+__pycache__/
+
+# checkpoints
+checkpoints/*.pth
+checkpoints/*.pt
+
+# python
+*.pyc
