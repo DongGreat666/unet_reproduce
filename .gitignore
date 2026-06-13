@@ -9,5 +9,9 @@ __pycache__/
 checkpoints/*.pth
 checkpoints/*.pt
 
+# logs中的模型权重
+logs/**/*.pth
+logs/**/*.pt
+
 # python
 *.pyc

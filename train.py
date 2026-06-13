@@ -4,15 +4,15 @@
 
 import os
 import torch
-import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 import config
+from models.resnet_unet import ResNetUNet
 from models.unet import UNet
 from utils.dataset import SegDataset
-from utils import metrics
+from utils import metrics, losses
 
 import csv
 
@@ -47,15 +47,17 @@ def train():
     device = torch.device(config.DEVICE)
     print(f"Using Device: {device}")
 
-    train_dataset = SegDataset(config.TRAIN_IMAGE_DIR, config.TRAIN_MASK_DIR, img_size=config.IMG_SIZE)
-    val_dataset = SegDataset(config.VAL_IMAGE_DIR, config.VAL_MASK_DIR, img_size=config.IMG_SIZE)
+    train_dataset = SegDataset(config.TRAIN_IMAGE_DIR, config.TRAIN_MASK_DIR, img_size=config.IMG_SIZE, train=True)
+    val_dataset = SegDataset(config.VAL_IMAGE_DIR, config.VAL_MASK_DIR, img_size=config.IMG_SIZE, train=False)
 
     train_loader = DataLoader(train_dataset, batch_size=config.BATCH_SIZE, shuffle=True, num_workers=config.NUM_WORKERS)
     val_loader = DataLoader(val_dataset, batch_size=config.BATCH_SIZE, shuffle=False, num_workers=config.NUM_WORKERS)
 
-    model = UNet(n_channels=config.IN_CHANNELS, n_classes=config.NUM_CLASSES).to(device)
+    # model = UNet(n_channels=config.IN_CHANNELS, n_classes=config.NUM_CLASSES).to(device)
+    model = ResNetUNet(n_channels=config.IN_CHANNELS, n_classes=config.NUM_CLASSES).to(device)
 
-    criterion = nn.BCEWithLogitsLoss()
+    # criterion = nn.BCEWithLogitsLoss()
+    criterion = losses.BCEDiceEdgeLoss(bce_weight=0.4, dice_weight=0.5, edge_weight=0.1)
     optimizer = optim.Adam(model.parameters(), lr=config.LR)
 
     best_dice = 0.0

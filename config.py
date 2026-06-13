@@ -20,7 +20,7 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 # ============================数据集==================================
 DATASET_NAME = "OxfordPet"
-IMG_SIZE = 256
+IMG_SIZE = 512
 IN_CHANNELS = 3
 NUM_CLASSES = 1
 TRAINSET_RATIO = 0.7
@@ -28,10 +28,11 @@ VALSET_RATIO = 0.2
 TESTSET_RATIO = 0.1
 
 # ===========================训练参数==================================
-EPOCHS = 50
+EPOCHS = 20
 BATCH_SIZE = 4
 LR = 1e-4
 NUM_WORKERS = 0
+
 
 # ============================路径==================================
 TRAIN_IMAGE_DIR = os.path.join(DATA_DIR, "train", "images")

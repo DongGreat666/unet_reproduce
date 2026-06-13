@@ -10,13 +10,14 @@ class DoubleConv(nn.Module):
     def __init__(self, in_ch, out_ch):
         # 执行父类的初始化操作
         super(DoubleConv, self).__init__()
+        # 定义一个序列模块，包含两层卷积和ReLU激活函数
         self.conv = nn.Sequential(
             nn.Conv2d(in_ch, out_ch, 3, padding=1),
             nn.ReLU(inplace=True),
             nn.Conv2d(out_ch, out_ch, 3, padding=1),
             nn.ReLU(inplace=True)
         )
-
+    # 定义前向传播函数，输入x通过卷积层进行处理并返回结果
     def forward(self, x):
         return self.conv(x)
 
@@ -24,6 +25,7 @@ class DoubleConv(nn.Module):
 class UNet(nn.Module):
     def __init__(self, n_channels=config.IN_CHANNELS, n_classes=config.NUM_CLASSES):
         super(UNet, self).__init__()
+        # 
         self.inc = DoubleConv(n_channels, 64)
         self.down1 = nn.Sequential(nn.MaxPool2d(2), DoubleConv(64, 128))
         self.down2 = nn.Sequential(nn.MaxPool2d(2), DoubleConv(128, 256))
